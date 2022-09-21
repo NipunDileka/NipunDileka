@@ -21,9 +21,28 @@ const PaymentForm =() =>{
             method: 'post',
             headers: {
                 'Content-Type':'application/json'
+    body:JSON.stringify({amount:10000}),
+        }).then((res)=>res.json())
+        const{
+            paymentIntent: {client_secret},
+        } = response
+        console.log((client_secret))
+
+        const paymentResult = await stripe.confirmCardPayment(client_secret,{
+            payment_method:{
+            card:elements.getElement(CardElement),
+            billing_details:{
+                name:'Nipun Dileka'
+            }
             }
         })
-
+        if(paymentResult.error){
+            alert(paymentResult.error)
+        }else{
+            if(paymentResult.paymentIntent.status === 'succeeded'){
+                alert('Payment Successfull')
+            }
+        }
     }
 
 return(
